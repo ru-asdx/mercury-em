@@ -4,33 +4,28 @@ from minimalmodbus import _calculate_crc_string as modbus_crc
 
 from struct import pack, unpack
 from typing import Union, Sequence
-
-import json
+from .utils import digitize
 
 def read_vap(s, address_mercury, cmd=0x08):
     ''' Read Voltage (V), Amperage (A), Power (kW/h)
 
-    
-        0x8 - код запроса
-        11,14,16 - код параметра
-        bwri 
+    0x8 - код запроса
+    x11, x14, x16 - код параметра
+    bwri
     '''
 
     data = send_tcp_command(s, address_mercury, cmd, 0x16, 0x11)
     headers = ['V_F1', 'V_F2', 'V_F3']
-
     result = {}
 
     for r in headers:
-        #print (f"data: {data}")
-        result[r] = digitize( bytes([data[0], data[2], data[1]]), 16 )/100
+        result[r] = digitize( bytes([data[0], data[2], data[1]]), 16 ) / 100
         data = data[3:]
 
     data = send_tcp_command(s, address_mercury, cmd, 0x16, 0x00)
     headers = ['Psum', 'P_F1', 'P_F2', 'P_F3']
 
     for r in headers:
-        #print (f"data: {data}")
         result[r] = digitize( bytes([data[2], data[1]]), 16 )/100
         data = data[3:]
 
@@ -38,19 +33,10 @@ def read_vap(s, address_mercury, cmd=0x08):
 
     headers = ['A_F1', 'A_F2', 'A_F3']
     for r in headers:
-        #print (f"data: {data}")
         result[r] = digitize( bytes([data[0], data[2], data[1]]), 16 )/1000
         data = data[3:]
 
     return result
-
-
-#    voltage = digitize(data[1:3]) / 10
-#    amperage = digitize(data[3:5]) / 100
-#    power = digitize(data[5:8])
-
-#    return voltage, amperage, power
-
 
 
 
@@ -117,7 +103,6 @@ def read_freq(s, address_mercury, cmd=0x08):
 def check_connect(s, address_mercury, cmd=0x00, *args):
     #print (f"check_connect....")
     data = send_tcp_command(s, address_mercury, cmd, *args)
-
     #print (pretty_hex(data))
 
 def open_channel(s, address_mercury, user=0x1, passwd="1111111", cmd=0x01, *args):
@@ -230,74 +215,3 @@ def unpack_msg(message: bytes):
     address = unpack(ADDRESS_FMT, message[:1])[0]
     data = list(message[1:])
     return address, data
-
-
-def digitize(byte_string, base = 16) -> int:
-    r"""
-    >>> digitize(b'\x00\x12\x34')
-    1234
-    """
-    str_num = ''.join(upper_hex(b) for b in byte_string)
-    return int(str_num, base)
-
-
-def upper_hex(byte: Union[str, bytes, int]) -> str:
-    r"""
-    >>> upper_hex('\x00')
-    '00'
-    >>> upper_hex(0x0)
-    '00'
-    >>> upper_hex(5)
-    '05'
-    >>> upper_hex(b'\x01')
-    '01'
-    >>> upper_hex('')
-    Traceback (most recent call last):
-    ...
-    ValueError: expected single byte
-    >>> upper_hex(b'')
-    Traceback (most recent call last):
-    ...
-    ValueError: expected single byte
-    >>> upper_hex('\x00\x01')
-    Traceback (most recent call last):
-    ...
-    ValueError: expected single byte
-    >>> upper_hex(b'\x00\x01')
-    Traceback (most recent call last):
-    ...
-    ValueError: expected single byte
-    """
-    if isinstance(byte, (str, bytes)):
-        if len(byte) != 1:
-            raise ValueError('expected single byte')
-        if isinstance(byte, str):
-            byte = ord(byte)
-        elif isinstance(byte, bytes):
-            byte = byte[0]
-    return '%02X' % byte
-
-
-def pretty_hex(byte_string) -> str:
-    r"""
-    >>> pretty_hex('Python')
-    '50 79 74 68 6F 6E'
-    >>> pretty_hex('\x00\xa1\xb2')
-    '00 A1 B2'
-    >>> pretty_hex([1, 2, 3, 5, 8, 13])
-    '01 02 03 05 08 0D'
-    """
-    return ' '.join(upper_hex(c) for c in byte_string)
-
-
-
-def output_text(arr):
-    for k in arr:
-        for j in arr[k]:
-            print (f"{k}_{j}=" + str(arr[k][j]))
-
-
-def output_json(arr):
-    print (json.dumps(arr))
-
-
