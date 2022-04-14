@@ -10,7 +10,6 @@ RUN git clone https://github.com/ru-asdx/shell2http $GOPATH/src/github.com/ru-as
 
 ###
 
-
 FROM python:3.10.4-slim-bullseye
 MAINTAINER asdx 
 
@@ -28,7 +27,6 @@ RUN pip install -U pip setuptools wheel && \
     chmod +x /tini
 
 USER mercury
-
 
 ENTRYPOINT ["/tini", "--"]
 CMD /app/shell2http -port 30001 -form /mercury-em 'python mercury-em.py --proto=$v_proto --serial=$v_serial --host=$v_host --port=$v_port'
