@@ -71,6 +71,7 @@ def send_tcp_command(s, address_mercury, command, *params, **kwargs):
         if received_address == address_mercury:
             return received_data
 
+    raise ValueError(f"Error while read data from socket")
 
 
 def pack_msg(address: Union[int, bytes], *args: Sequence[int], **kwargs) -> bytes:

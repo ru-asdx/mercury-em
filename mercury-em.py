@@ -63,11 +63,20 @@ if __name__ == "__main__":
         ''' Сетевой адрес счетчика - серийный номер 
         '''
         result['info'] = {}
-        result['info']['V'], result['info']['A'], result['info']['P'] = mercury206.read_vap(sock, args.serial)
-        result['info']['freq'] = mercury206.read_freq(sock, args.serial)
+        try:
+            result['info']['V'], result['info']['A'], result['info']['P'] = mercury206.read_vap(sock, args.serial)
+            result['info']['freq'] = mercury206.read_freq(sock, args.serial)
 
-        result['energy'] = mercury206.read_energy(sock, args.serial)
+            result['energy'] = mercury206.read_energy(sock, args.serial)
+        except TimeoutError:
+            result['error'] = "Timeout while read data from socket"
+        except socket.timeout:
+            result['error'] = "Timeout while read data from socket"
+        except ValueError:
+            result['error'] = "Wrong data"
 
+        finally:
+            sock.close()
 
     elif args.proto == "m236":
 
@@ -90,18 +99,28 @@ if __name__ == "__main__":
         if not args.passwd:
             args.passwd = "222222" if args.user==2 else "111111"
 
-        mercury236.check_connect(sock, args.serial)
-        mercury236.open_channel(sock, args.serial, args.user, args.passwd)
+        try:
+            mercury236.check_connect(sock, args.serial)
+            mercury236.open_channel(sock, args.serial, args.user, args.passwd)
 
-        result['energy_phases_AR'] = mercury236.read_energy_sum_act_react(sock, args.serial)
-        result['energy_tarif_AR'] = mercury236.read_energy_tarif_act_react(sock, args.serial)
-        result['energy_phases'] = mercury236.read_energy_sum_by_phases(sock, args.serial)
-        result['energy_tarif'] = mercury236.read_energy_tarif_by_phases(sock, args.serial)
+            result['energy_phases_AR'] = mercury236.read_energy_sum_act_react(sock, args.serial)
+            result['energy_tarif_AR'] = mercury236.read_energy_tarif_act_react(sock, args.serial)
+            result['energy_phases'] = mercury236.read_energy_sum_by_phases(sock, args.serial)
+            result['energy_tarif'] = mercury236.read_energy_tarif_by_phases(sock, args.serial)
 
-        result['info'] = mercury236.read_vap(sock, args.serial)
-        result['info']['freq'] = mercury236.read_freq(sock, args.serial)
+            result['info'] = mercury236.read_vap(sock, args.serial)
+            result['info']['freq'] = mercury236.read_freq(sock, args.serial)
 
-        mercury236.close_channel(sock, args.serial)
+            mercury236.close_channel(sock, args.serial)
+        except TimeoutError:
+            result['error'] = "Timeout while read data from socket"
+        except socket.timeout:
+            result['error'] = "Timeout while read data from socket"
+        except ValueError:
+            result['error'] = "Wrong data"
+
+        finally:
+            sock.close()
 
 
     print_output(result, args.format)

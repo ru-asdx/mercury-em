@@ -48,7 +48,7 @@ def read_energy(s, address_mercury, cmd=0x05, param=0x00, tarif=0x00, *args):
     '''
 
     data = send_tcp_command(s, address_mercury, cmd, param, tarif)
-    
+
     headers = ['A+_F1', 'A+_F2', 'A+_F3'] if param == 0x60 else ['A+', 'A-', 'R+', 'R-']
     suffix = "sum" if tarif == 0x0 else '_T'+str(tarif)
 
@@ -111,7 +111,6 @@ def open_channel(s, address_mercury, user=0x1, passwd="1111111", cmd=0x01, *args
     data = send_tcp_command(s, address_mercury, 0x01, user, passwd=passwd)
     #print (pretty_hex(data))
 
-
 def close_channel(s, address_mercury, cmd=0x02, *args):
     #print (f"close channel...")
     # 0x02 - close channel
@@ -150,6 +149,7 @@ def send_tcp_command(s, address_mercury, command, *params, **kwargs):
         if received_address == address_mercury:
             return received_data
 
+    raise ValueError(f"Error while read data from socket")
 
 
 def pack_msg(address: Union[int, bytes], *args: Sequence[int], **kwargs) -> bytes:
