@@ -5,7 +5,7 @@
 Официальная документация по протоколам обмена используемых в счетчиках Меркурий
 * [Официальный сайт Incotex](https://www.incotexcom.ru/support/docs/protocol)
 * [Протокол обмена однофазных счетчиков Меркурий 200, 201, 203 (кроме Меркурий 203.2TD), 206. версия от 01.04.2018](https://www.incotexcom.ru/files/em/docs/mercury-protocol-obmena-1.pdf)
-* [Протокол обмена трёхфазных счетчиков Меркурий (Mercury) 203.2TD, 204, 208, 230, 231, 234, 236, 238 версия от 21.12.2021](https://www.incotexcom.ru/files/em/docs/merkuriy-sistema-komand-ver-1-2021-12-24.pdf)
+* [Протокол обмена трёхфазных счетчиков Меркурий (Mercury) 203.2TD, 204, 208, 230, 231, 234, 236, 238 версия от 12.12.2022](https://www.incotexcom.ru/files/em/docs/merkuriy-sistema-komand-ver-1-2022-12-12.pdf)
 
 # Installation
 
