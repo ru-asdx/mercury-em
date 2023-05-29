@@ -54,8 +54,11 @@ def read_energy(s, address_mercury, cmd=0x05, param=0x00, tarif=0x00, *args):
 
     result = {}
     for r in headers:
-        result[r+suffix] = digitize( bytes([data[1], data[0], data[3], data[2]]), 16 )/1000
-        data = data[4:]
+        if len(data) < 4:
+            result[r+suffix] = 0
+        else:
+            result[r+suffix] = digitize( bytes([data[1], data[0], data[3], data[2]]), 16 )/1000
+            data = data[4:]
 
     if 'A-'+suffix in result:
         result['A-'+suffix] = 0
