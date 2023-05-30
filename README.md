@@ -5,7 +5,7 @@ Receiving information from Mercury energymeters (RS485 over TCP/IP)
 Official documentation on protocols used in Mercury energymeters:
 * [Official site Incotex](https://www.incotexcom.ru/support/docs/protocol)
 * [Protocol for single-phase Mercury energymeters 200, 201, 203 (except Mercury 203.2TD), 206. version 01.04.2018](https://www.incotexcom.ru/files/em/docs/mercury-protocol-obmena-1.pdf)
-* [Protocol for three-phase Mercury energymeters 203.2TD, 204, 208, 230, 231, 234, 236, 238 version 12.12.2022](https://www.incotexcom.ru/files/em/docs/merkuriy-sistema-komand-ver-1-2022-12-12.pdf)
+* [Protocol for three-phase Mercury energymeters 203.2TD, 204, 208, 230, 231, 234, 236, 238 version 15.05.2023](https://www.incotexcom.ru/files/em/docs/merkuriy-sistema-komand-ver-1-ot-2023-05-15.pdf)
 
 # Installation
 
